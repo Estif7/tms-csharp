@@ -26,3 +26,4 @@ C:\Users\Estifanose\Desktop\Training Management System\tms-csharp\obj\Debug\net1
 C:\Users\Estifanose\Desktop\Training Management System\tms-csharp\obj\Debug\net10.0\TmsCore.pdb
 C:\Users\Estifanose\Desktop\Training Management System\tms-csharp\obj\Debug\net10.0\TmsCore.genruntimeconfig.cache
 C:\Users\Estifanose\Desktop\Training Management System\tms-csharp\obj\Debug\net10.0\ref\TmsCore.dll
+C:\Users\Estifanose\Desktop\Training Management System\tms-csharp\obj\Debug\net10.0\TmsCore.sourcelink.json
