@@ -280,7 +280,8 @@ CourseCode[] courses = await Task.WhenAll(courseTasks);
 
 Console.WriteLine($"\nLoaded {students.Length} students and {courses.Length} courses in {sw.ElapsedMilliseconds}ms");
 
-Console.WriteLine("\n--- Exercise 6 Part B: Processing Enrollment Loop ---");
+// EXERCISE 6 PART B & 6B: ENROLLMENT EXECUTION LOOP WITH BACKGROUND SEEDING
+Console.WriteLine("\n--- Exercise 6 Part B & 6B: Processing Registration Pipeline ---");
 var enrollCourse = new CourseCode { Code = "CRS-101", Title = "C# Mastery", Capacity = 2 };
 var enrollments = new List<EnrollmentRecord>();
 var failures = new List<string>();
@@ -291,14 +292,23 @@ foreach (var student in students)
 {
     try
     {
+        // Core business rules registration processing
         var record = enrollService.ProcessRegistration(student, enrollCourse);
         enrollCourse.EnrolledCount++;
         enrollments.Add(record);
         Console.WriteLine($"  Enrolled: {student.Name}");
+
+        // EXERCISE 6B: Safe Fire-and-forget notification background invocation
+        _ = dataService.SendConfirmationAsync(student);
     }
-    catch (InvalidOperationException ex) // Catches CapacityReachedException via inheritance
+    catch (InvalidOperationException ex) // Intercepts CapacityReachedException safely via base class inheritance
     {
         failures.Add($"{student.Name}: {ex.Message}");
         Console.WriteLine($"  Rejected: {student.Name} - {ex.Message}");
     }
 }
+
+// Briefly await to allow background fire-and-forget tasks to print to the stream output
+await Task.Delay(150);
+
+Console.WriteLine($"\nProcessed {enrollments.Count} enrollments with {failures.Count} failures in {sw.ElapsedMilliseconds}ms");

@@ -45,4 +45,20 @@ public class RegistrationDataService
             }
         };
     }
+
+    // EXERCISE 6B: SAFE FIRE-AND-FORGET PATTERN
+    public async Task SendConfirmationAsync(Student student)
+    {
+        try
+        {
+            await Task.Delay(100); // Simulate sending network email latency
+            Console.WriteLine($"  [Background notification] Email sent to {student.Name}");
+        }
+        catch (Exception ex)
+        {
+            // Log the failure securely but do NOT re-throw it.
+            // This isolates background context from crashing the active HTTP registration runner thread.
+            Console.WriteLine($"  [Background notification ERROR] Email failed for {student.Name}: {ex.Message}");
+        }
+    }
 }
