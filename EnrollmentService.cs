@@ -1,5 +1,5 @@
-// EnrollmentService.cs
 using System;
+using System.Threading.Tasks;
 
 namespace TmsCore;
 
@@ -7,28 +7,49 @@ public class EnrollmentService
 {
     public EnrollmentRecord ProcessRegistration(Student? student, CourseCode? course)
     {
-        // TODO 1: Guard clauses - Fail fast [cite: 324]
-        if (student is null) 
+        // Precondition Guard Clauses
+        if (student is null)
             throw new ArgumentNullException(nameof(student));
-
-        if (course is null) 
+        
+        if (course is null)
             throw new ArgumentNullException(nameof(course));
 
-        // Check if the course capacity is full, zero, or negative [cite: 324, 326]
-        if (course.Capacity <= 0 || course.EnrolledCount >= course.Capacity)
-            throw new InvalidOperationException("Business rule violation: The selected course is full or unavailable.");
+        // Module constraint: Check if enrollment count has met or exceeded course capacity
+        if (course.EnrolledCount >= course.Capacity)
+            throw new CapacityReachedException(course.Code);
 
-        // TODO 2: Switch expression pattern to classify academic standing [cite: 330]
+        // Switch expression for Academic Standing classification
         string standing = student.GPA switch
         {
             >= 3.5m => "Honors",
             >= 2.5m => "Good Standing",
-            _ => "Academic Warning" // Fallback arm [cite: 336, 395]
+            _ => "Academic Warning"
         };
 
-        Console.WriteLine($"{student.Name} is in {standing} standing.");
+        Console.WriteLine($"  {student.Name} is in {standing}.");
+        
+        return new EnrollmentRecord(student.Id, course.Code, DateTime.UtcNow);
+    }
 
-        // TODO 3: Return immutable checkpoint tracking instance [cite: 342]
-        return new EnrollmentRecord(student.Id, course.Code, DateTime.UtcNow); 
+    // Part B: Parallel Catalog Loading Engine
+    public async Task LoadCourseCatalogParallelAsync(string[] courseCodes)
+    {
+        // Initialize an array of un-awaited task tracking references
+        Task[] loadingTasks = new Task[courseCodes.Length];
+
+        for (int i = 0; i < courseCodes.Length; i++)
+        {
+            string code = courseCodes[i];
+            loadingTasks[i] = SimulateCatalogFetchAsync(code);
+        }
+
+        // Await all tasks concurrently; executes in parallel non-blockingly
+        await Task.WhenAll(loadingTasks);
+    }
+
+    private async Task SimulateCatalogFetchAsync(string code)
+    {
+        await Task.Delay(150);
+        Console.WriteLine($"[Catalog Engine] Loaded course configuration metadata for: {code}");
     }
 }
