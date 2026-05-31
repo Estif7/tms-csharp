@@ -228,7 +228,7 @@ using System.Threading.Tasks;
 // ----------------------------------------------------------------------------
 // EXERCISE 6 - Async and Resilience
 // ----------------------------------------------------------------------------
-Console.WriteLine("=====================================================================");
+Console.WriteLine("\n=====================================================================");
 Console.WriteLine("Exercise 6: Async Programming & Resilience");
 Console.WriteLine("=====================================================================");
 
@@ -312,3 +312,56 @@ foreach (var student in students)
 await Task.Delay(150);
 
 Console.WriteLine($"\nProcessed {enrollments.Count} enrollments with {failures.Count} failures in {sw.ElapsedMilliseconds}ms");
+
+
+
+
+
+// EXERCISE 7: CATCHING CUSTOM DOMAIN FAULTS
+Console.WriteLine("\n=====================================================================");
+Console.WriteLine("Exercise 7: Targeted Domain Exception Handling");
+Console.WriteLine("=====================================================================");
+
+try
+{
+    var overflowCourse = new CourseCode { Code = "CRS-999", Title = "Overflow Test", Capacity = 1, EnrolledCount = 1 };
+    
+    enrollService.ProcessRegistration(
+        new Student { Id = "S99", Name = "Test", Age = 20, GPA = 3.0m },
+        overflowCourse
+    );
+}
+catch (CapacityReachedException ex)
+{
+    // The calling code now knows exactly which domain context properties caused the violation
+    Console.WriteLine("Domain exception caught:");
+    Console.WriteLine($"  Course: {ex.CourseCode}");
+    Console.WriteLine($"  Message: {ex.Message}");
+}
+
+
+// ----------------------------------------------------------------------------
+// EXERCISE 7B: THE INTEGRATION SUMMARY SUMMARY REPORT
+// ----------------------------------------------------------------------------
+sw.Stop();
+
+decimal classAverage = students.Length > 0 
+    ? students.Average(s => s.GPA) 
+    : 0m;
+
+Console.WriteLine("\n========== ENROLLMENT SUMMARY ==========");
+Console.WriteLine($"Total students loaded:   {students.Length}");
+Console.WriteLine($"Successful enrollments:  {enrollments.Count}");
+Console.WriteLine($"Failed enrollments:      {failures.Count}");
+Console.WriteLine($"Class average GPA:       {classAverage:F2}");
+Console.WriteLine($"Total elapsed time:      {sw.ElapsedMilliseconds}ms");
+
+if (failures.Count > 0)
+{
+    Console.WriteLine("\n--- Failure Details ---");
+    foreach (var failure in failures)
+    {
+        Console.WriteLine($"  {failure}");
+    }
+}
+Console.WriteLine("========================================");
