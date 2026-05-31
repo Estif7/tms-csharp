@@ -1,4 +1,6 @@
 ﻿// EXERCISE 1
+using TmsCore;
+
 Console.WriteLine("\n ============================================================================");
 Console.WriteLine(" EXERCISE 1: NULL HANDLING & STRING INTERPOLATION");
 Console.WriteLine(" ============================================================================");
@@ -118,4 +120,41 @@ void PrintGradeReport(IEnumerable<IGradable> assessments)
         // We interact purely with the interface contract, completely decoupled from concrete classes
         Console.WriteLine($"{item.Title}: {item.CalculateGrade():F2}%");
     }
+}
+
+
+
+// EXERCISE 4: GUARD CLAUSES & PATTERN MATCHING VALIDATION
+Console.WriteLine("\n ============================================================================");
+Console.WriteLine(" EXERCISE 4: ENROLLMENT VALIDATION & GUARDS");
+Console.WriteLine(" ============================================================================");
+
+var service = new EnrollmentService();
+
+// Test 1: Valid registration setup
+var validStudent = new Student { Id = "S1", Name = "Abeba", Age = 20, GPA = 3.8m };
+var validCourse = new CourseCode { Code = "CS-401", Title = "Advanced C#", Capacity = 30 };
+var registrationResult = service.ProcessRegistration(validStudent, validCourse);
+Console.WriteLine($"Enrolled: {registrationResult.StudentID} in {registrationResult.CourseCode}");
+
+// Test 2: Null student guard trigger
+try
+{
+    service.ProcessRegistration(null, validCourse);
+}
+catch (ArgumentNullException ex)
+{
+    Console.WriteLine($"Guard caught: {ex.ParamName}");
+}
+
+// Test 3: Business rules exception verification (Full Course)
+var fullCourse = new CourseCode { Code = "CS-402", Title = "Full Course", Capacity = 1 };
+fullCourse.EnrolledCount = 1; // Manually mock full context
+try
+{
+    service.ProcessRegistration(validStudent, fullCourse);
+}
+catch (InvalidOperationException ex)
+{
+    Console.WriteLine($"Business rule: {ex.Message}"); 
 }
