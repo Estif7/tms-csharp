@@ -23,3 +23,15 @@ Console.WriteLine($"Courses: {enrollmentCount}");
 Console.WriteLine($"Grant: {grantAmount:F2}");
 Console.WriteLine($"Enrolled: {enrolledAt:yyyy-MM-dd}");
 Console.WriteLine($"Campus: {campusRegion ?? "Not Assigned"}");
+
+
+
+// EXERCISE 2
+double legacygrantPerStudent = 1999.99;
+double legacytotalAllocation = legacygrantPerStudent * 100_000;
+Console.WriteLine($"Total allocated (double): {legacytotalAllocation}");
+    
+decimal grantPerStudent = 1999.99m;
+decimal totalAllocation = grantPerStudent * 100_000m;
+Console.WriteLine($"Total allocated (decimal): {totalAllocation}");
+Console.WriteLine($"Total allocated (formatted): {totalAllocation:F2}");
