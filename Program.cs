@@ -1,5 +1,8 @@
 ﻿// EXERCISE 1
-Console.WriteLine("\n--- EXERCISE 1: NULL HANDLING ---");
+Console.WriteLine("\n ============================================================================");
+Console.WriteLine(" EXERCISE 1: NULL HANDLING & STRING INTERPOLATION");
+Console.WriteLine(" ============================================================================");
+
 string? region = null; 
 
 string? upperRegion = region?.ToUpper(); 
@@ -28,7 +31,10 @@ Console.WriteLine($"Campus: {campusRegion ?? "Not Assigned"}");
 
 
 // EXERCISE 2
-Console.WriteLine("\n--- EXERCISE 2: FINANCIAL PRECISION ---");
+Console.WriteLine("\n ============================================================================");
+Console.WriteLine(" EXERCISE 2: FINANCIAL PRECISION");
+Console.WriteLine(" ============================================================================");
+
 double legacygrantPerStudent = 1999.99;
 double legacytotalAllocation = legacygrantPerStudent * 100_000;
 Console.WriteLine($"Total allocated (double): {legacytotalAllocation}");
@@ -42,8 +48,9 @@ Console.WriteLine($"Total allocated (formatted): {totalAllocation:F2}");
 
 
 // EXERCISE 3
-Console.WriteLine("\n--- EXERCISE 3: Pipeline & Encapsulation Testing ---");
-
+Console.WriteLine("\n ============================================================================");
+Console.WriteLine(" EXERCISE 3: Pipeline & Encapsulation Testing");
+Console.WriteLine(" ============================================================================");
 
 Console.WriteLine("--- Exercise 3 - Part 1: Record Immutability & Value Equality ---");
 
@@ -87,3 +94,28 @@ Console.WriteLine("\n--- Exercise 3 - Part 3: Student Property Range Rules ---")
 
 var s = new Student {Id = "S1", Name="Abeba", Age=20, GPA=3.8m};
 Console.WriteLine($"Student: {s.Name}, Age: {s.Age}, GPA: {s.GPA}");
+
+
+
+// EXERCISE 3B: POLYMORPHIC INTERFACE TESTING
+Console.WriteLine("\n ============================================================================");
+Console.WriteLine(" Exercise 3B: Polymorphic Grade Report");
+Console.WriteLine(" ============================================================================");
+
+// Create an array utilizing our IGradable interface contract
+IGradable[] cohortAssessments = [
+    new Quiz { Title = "C# Basics", CorrectAnswers = 18, TotalQuestions = 20 }, 
+    new LabAssignment { Title = "Registration API", FunctionalityScore = 90m, CodeQualityScore = 85m }
+];
+
+// Call the polymorphic reporting engine
+PrintGradeReport(cohortAssessments);
+
+void PrintGradeReport(IEnumerable<IGradable> assessments)
+{
+    foreach (var item in assessments)
+    {
+        // We interact purely with the interface contract, completely decoupled from concrete classes
+        Console.WriteLine($"{item.Title}: {item.CalculateGrade():F2}%");
+    }
+}
